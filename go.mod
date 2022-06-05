@@ -1,4 +1,4 @@
-module microblog
+module github.com/rinoguchi/microblog
 
 go 1.17
 
