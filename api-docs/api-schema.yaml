@@ -1,0 +1,91 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Microblog
+  description: API for mycroblog
+  contact:
+    name: rinoguchi
+    email: inogu1979@gmail.com
+    url: https://rinoguchi.net
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/mit-license.php
+servers:
+  - url: http://localhost:8080
+paths:
+  /comments:
+    post:
+      description: create a new comment
+      operationId: addComment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewComment"
+      responses:
+        "200":
+          description: comment response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      description: get comments
+      operationId: getComments
+      responses:
+        "200":
+          description: comment response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    CommonProperties:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    NewComment:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          maxLength: 100
+
+    Comment:
+      allOf:
+        - $ref: "#/components/schemas/NewComment"
+        - $ref: "#/components/schemas/CommonProperties"
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string

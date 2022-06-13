@@ -1,0 +1,7 @@
+package: adapters
+generate:
+  chi-server: true
+  embedded-spec: true
+output: adapters/server.gen.go
+output-options:
+  skip-prune: true
