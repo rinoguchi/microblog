@@ -1,21 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 
+	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/rinoguchi/microblog/adapters"
 )
 
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.RequestID)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("はろー　わーるど！"))
-	})
-
-	http.ListenAndServe(":8080", r)
+	swagger, err := adapters.GetSwagger() // APIスキーマ定義を取得
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error loading swagger spec\n: %s", err)
+		os.Exit(1)
+	}
+	swagger.Servers = nil
+	server := adapters.NewServer()
+	router := chi.NewRouter()
+	router.Use(middleware.OapiRequestValidator(swagger)) // validationを設定
+	adapters.HandlerFromMux(server, router)              // chiのrouterと実装したserverを紐付け
+	http.ListenAndServe(":8080", router)                 // 8080ポートをリッスン
 }
