@@ -27,7 +27,7 @@ func (c *CommentRepositoryImpl) Update(ctx context.Context, comment *entities.Co
 
 func (c *CommentRepositoryImpl) FindAll(ctx context.Context) ([]*entities.CommentEntity, error) {
 	// TODO: 実際のDBにアクセスする
-	return []*entities.CommentEntity{newDummyCommentEntity()}, nil
+	return []*entities.CommentEntity{newDummyCommentEntity(), newDummyCommentEntity()}, nil
 }
 
 func newDummyCommentEntity() *entities.CommentEntity {
