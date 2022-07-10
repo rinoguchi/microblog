@@ -8,10 +8,10 @@ import (
 )
 
 type Server struct {
-	commentUsecase *usecases.CommentUsecase
+	commentUsecase usecases.CommentUsecase
 }
 
-func NewServer(commentUsecase *usecases.CommentUsecase) *Server {
+func NewServer(commentUsecase usecases.CommentUsecase) *Server {
 	return &Server{
 		commentUsecase: commentUsecase,
 	}
@@ -30,7 +30,7 @@ func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) AddComment(w http.ResponseWriter, r *http.Request) {
 	newComment := usecases.NewComment{Text: "dummy"}
-	comment, err := s.commentUsecase.AddComment(r.Context(), &newComment)
+	comment, err := s.commentUsecase.AddComment(r.Context(), newComment)
 	if err != nil {
 		handleError(w, err)
 		return

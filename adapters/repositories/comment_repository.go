@@ -12,28 +12,28 @@ type CommentRepositoryImpl struct {
 }
 
 func NewCommentRepositoryImpl() entities.CommentRepository {
-	return &CommentRepositoryImpl{}
+	return CommentRepositoryImpl{}
 }
 
-func (c *CommentRepositoryImpl) Add(ctx context.Context, comment *entities.CommentEntity) (*entities.CommentEntity, error) {
+func (c CommentRepositoryImpl) Add(ctx context.Context, comment entities.CommentEntity) (entities.CommentEntity, error) {
 	// TODO: 実際のDBにアクセスする
 	return newDummyCommentEntity(), nil
 }
 
-func (c *CommentRepositoryImpl) Update(ctx context.Context, comment *entities.CommentEntity) (*entities.CommentEntity, error) {
+func (c CommentRepositoryImpl) Update(ctx context.Context, comment entities.CommentEntity) (entities.CommentEntity, error) {
 	// TODO: 実際のDBにアクセスする
 	return newDummyCommentEntity(), nil
 }
 
-func (c *CommentRepositoryImpl) FindAll(ctx context.Context) ([]*entities.CommentEntity, error) {
+func (c CommentRepositoryImpl) FindAll(ctx context.Context) ([]entities.CommentEntity, error) {
 	// TODO: 実際のDBにアクセスする
-	return []*entities.CommentEntity{newDummyCommentEntity(), newDummyCommentEntity()}, nil
+	return []entities.CommentEntity{newDummyCommentEntity(), newDummyCommentEntity()}, nil
 }
 
-func newDummyCommentEntity() *entities.CommentEntity {
+func newDummyCommentEntity() entities.CommentEntity {
 	id := int64(rand.Intn(100))
 	now := time.Now()
-	return &entities.CommentEntity{
+	return entities.CommentEntity{
 		Id:        &id,
 		Text:      "Dummy Text",
 		CreatedAt: &now,
