@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	println("main started")
 	swagger, err := controllers.GetSwagger() // APIスキーマ定義を取得
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading swagger spec\n: %s", err)
@@ -21,5 +22,7 @@ func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.OapiRequestValidator(swagger)) // validationを設定
 	controllers.HandlerFromMux(server, router)           // chiのrouterと実装したserverを紐付け
-	http.ListenAndServe(":8080", router)                 // 8080ポートをリッスン
+	port := ":8080"
+	println("starting server port" + port)
+	http.ListenAndServe(port, router)
 }

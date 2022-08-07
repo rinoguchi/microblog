@@ -24,6 +24,7 @@ func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(comments)
 }
@@ -35,6 +36,8 @@ func (s *Server) AddComment(w http.ResponseWriter, r *http.Request) {
 		handleError(w, err)
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(comment)
 }

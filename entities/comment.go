@@ -15,5 +15,4 @@ type CommentEntity struct {
 type CommentRepository interface {
 	FindAll(ctx context.Context) ([]CommentEntity, error)
 	Add(ctx context.Context, comment CommentEntity) (CommentEntity, error)
-	Update(ctx context.Context, comment CommentEntity) (CommentEntity, error)
 }

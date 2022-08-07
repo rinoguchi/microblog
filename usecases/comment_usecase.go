@@ -18,16 +18,6 @@ func NewCommentUsecase(
 	}
 }
 
-func (c CommentUsecase) AddComment(ctx context.Context, newComment NewComment) (Comment, error) {
-	commentEntity, err := c.commentRepository.Add(ctx, entities.CommentEntity{
-		Text: newComment.Text,
-	})
-	if err != nil {
-		return Comment{}, err
-	}
-	return toComment(commentEntity), nil
-}
-
 func (c CommentUsecase) FindAllComment(ctx context.Context) ([]Comment, error) {
 	commentEntities, err := c.commentRepository.FindAll(ctx)
 	if err != nil {
@@ -38,6 +28,16 @@ func (c CommentUsecase) FindAllComment(ctx context.Context) ([]Comment, error) {
 		comments = append(comments, toComment(commentEntity))
 	}
 	return comments, nil
+}
+
+func (c CommentUsecase) AddComment(ctx context.Context, newComment NewComment) (Comment, error) {
+	commentEntity, err := c.commentRepository.Add(ctx, entities.CommentEntity{
+		Text: newComment.Text,
+	})
+	if err != nil {
+		return Comment{}, err
+	}
+	return toComment(commentEntity), nil
 }
 
 func toComment(commentEntity entities.CommentEntity) Comment {
