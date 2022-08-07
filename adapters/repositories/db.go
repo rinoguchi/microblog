@@ -1,7 +1,9 @@
 package repositories
 
 import (
+	"crypto/tls"
 	"database/sql"
+	"os"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -14,6 +16,12 @@ func GetDb() *bun.DB {
 
 	pgconn := pgdriver.NewConnector(
 		pgdriver.WithNetwork("tcp"),
+		pgdriver.WithAddr(os.Getenv("DB_ADDRESS")),
+		pgdriver.WithTLSConfig(&tls.Config{InsecureSkipVerify: true}),
+		pgdriver.WithUser(os.Getenv("DB_USER")),
+		pgdriver.WithPassword(os.Getenv("DB_PASSWORD")),
+		pgdriver.WithDatabase(os.Getenv("DB_NAME")),
+		pgdriver.WithApplicationName(os.Getenv("DB_APPLICATION_NAME")),
 		pgdriver.WithTimeout(5*time.Second),
 		pgdriver.WithDialTimeout(5*time.Second),
 		pgdriver.WithReadTimeout(5*time.Second),
