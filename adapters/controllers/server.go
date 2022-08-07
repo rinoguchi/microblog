@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
+	"github.com/rinoguchi/microblog/adapters/repositories"
 	"github.com/rinoguchi/microblog/usecases"
 )
 
@@ -18,7 +20,8 @@ func NewServer(commentUsecase usecases.CommentUsecase) *Server {
 }
 
 func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
-	comments, err := s.commentUsecase.FindAllComment(r.Context())
+	ctx := context.WithValue(r.Context(), "DB", repositories.GetDb())
+	comments, err := s.commentUsecase.FindAllComment(ctx)
 	if err != nil {
 		handleError(w, err)
 		return
@@ -30,8 +33,9 @@ func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) AddComment(w http.ResponseWriter, r *http.Request) {
+	ctx := context.WithValue(r.Context(), "DB", repositories.GetDb())
 	newComment := usecases.NewComment{Text: "dummy"}
-	comment, err := s.commentUsecase.AddComment(r.Context(), newComment)
+	comment, err := s.commentUsecase.AddComment(ctx, newComment)
 	if err != nil {
 		handleError(w, err)
 		return
