@@ -34,7 +34,13 @@ func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) AddComment(w http.ResponseWriter, r *http.Request) {
 	ctx := context.WithValue(r.Context(), "DB", repositories.GetDb())
-	newComment := usecases.NewComment{Text: "dummy"}
+
+	var newComment usecases.NewComment
+	if err := json.NewDecoder(r.Body).Decode(&newComment); err != nil {
+		handleError(w, err)
+		return
+	}
+
 	comment, err := s.commentUsecase.AddComment(ctx, newComment)
 	if err != nil {
 		handleError(w, err)
