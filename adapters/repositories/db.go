@@ -12,6 +12,11 @@ import (
 	"github.com/uptrace/bun/extra/bundebug"
 )
 
+// コンテキスト追加用のキー
+type dbKey int
+
+const DbKey dbKey = iota
+
 func GetDb() *bun.DB {
 
 	pgconn := pgdriver.NewConnector(

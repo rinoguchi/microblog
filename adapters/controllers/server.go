@@ -20,7 +20,7 @@ func NewServer(commentUsecase usecases.CommentUsecase) *Server {
 }
 
 func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
-	ctx := context.WithValue(r.Context(), "DB", repositories.GetDb())
+	ctx := context.WithValue(r.Context(), repositories.DbKey, repositories.GetDb())
 	comments, err := s.commentUsecase.FindAllComment(ctx)
 	if err != nil {
 		handleError(w, err)
@@ -33,7 +33,7 @@ func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) AddComment(w http.ResponseWriter, r *http.Request) {
-	ctx := context.WithValue(r.Context(), "DB", repositories.GetDb())
+	ctx := context.WithValue(r.Context(), repositories.DbKey, repositories.GetDb())
 
 	var newComment usecases.NewComment
 	if err := json.NewDecoder(r.Body).Decode(&newComment); err != nil {

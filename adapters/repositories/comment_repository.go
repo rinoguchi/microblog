@@ -44,7 +44,7 @@ func NewCommentRepositoryImpl() entities.CommentRepository {
 
 func (c CommentRepositoryImpl) Add(ctx context.Context, commentEntity entities.CommentEntity) (entities.CommentEntity, error) {
 	commentRecord := NewCommentRecord(commentEntity)
-	db := ctx.Value("DB").(*bun.DB)
+	db := ctx.Value(DbKey).(*bun.DB)
 	_, err := db.NewInsert().Model(&commentRecord).Exec(ctx)
 	if err != nil {
 		return entities.CommentEntity{}, err
@@ -54,7 +54,7 @@ func (c CommentRepositoryImpl) Add(ctx context.Context, commentEntity entities.C
 
 func (c CommentRepositoryImpl) FindAll(ctx context.Context) ([]entities.CommentEntity, error) {
 	var commentRecords []CommentRecord
-	db := ctx.Value("DB").(*bun.DB)
+	db := ctx.Value(DbKey).(*bun.DB)
 	err := db.NewSelect().Model(&commentRecords).Scan(ctx)
 	if err != nil {
 		return nil, err

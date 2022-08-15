@@ -17,7 +17,7 @@ go run .
 curl http://localhost:8080/comments
 
 # コメント登録
-curl -X POST -H "Content-Type: application/json" -d '{"text" : "dummy coment"}' http://localhost:8080/comments
+curl -X POST -H "Content-Type: application/json" -d '{"text" : "あいうえお"}' http://localhost:8080/comments
 ```
 
 - GET http://localhost:8080/comments
