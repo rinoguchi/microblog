@@ -1,0 +1,20 @@
+package repositories
+
+{{$ilen := len .Imports}}
+{{if gt $ilen 0}}
+import (
+	{{range .Imports}}"{{.}}"{{end}}
+  "github.com/uptrace/bun"
+)
+{{end}}
+
+{{range .Tables}}
+type Db{{ (TableMapper .Name) }} struct {
+bun.BaseModel `bun:"table:{{ .Name }},alias:{{ slice .Name 0 1 }}"`
+
+{{$table := .}}
+{{range .ColumnsSeq}}{{$col := $table.GetColumn .}}	{{ColumnMapper $col.Name}}	{{if (eq (ColumnMapper $col.Name) "Id")}}*{{end}}{{if (eq (ColumnMapper $col.Name) "CreatedAt")}}*{{end}}{{if (eq (ColumnMapper $col.Name) "UpdatedAt")}}*{{end}}{{Type $col}} `bun:"{{$col.Name}}{{if (eq (ColumnMapper $col.Name) "Id")}},pk{{end}}"`
+{{end}}
+}
+
+{{end}}

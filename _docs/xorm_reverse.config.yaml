@@ -1,0 +1,10 @@
+kind: reverse
+name: microblog
+source:
+  database: postgres
+  conn_str: "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_ADDRESS}/${DB_NAME}"
+targets:
+  - type: codes
+    language: golang
+    output_dir: adapters/repositories/models
+    template_path: adapters/repositories/models/gen/goxorm.tmpl

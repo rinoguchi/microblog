@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/rinoguchi/microblog/entities"
+	usecases "github.com/rinoguchi/microblog/usecases/models"
 )
 
 type CommentUsecase struct {
@@ -18,30 +19,30 @@ func NewCommentUsecase(
 	}
 }
 
-func (c CommentUsecase) FindAllComment(ctx context.Context) ([]Comment, error) {
+func (c CommentUsecase) FindAllComment(ctx context.Context) ([]usecases.UComment, error) {
 	commentEntities, err := c.commentRepository.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
-	comments := []Comment{}
+	uComments := []usecases.UComment{}
 	for _, commentEntity := range commentEntities {
-		comments = append(comments, toComment(commentEntity))
+		uComments = append(uComments, usecases.FromCommentEntity(commentEntity))
 	}
-	return comments, nil
+	return uComments, nil
 }
 
-func (c CommentUsecase) AddComment(ctx context.Context, newComment NewComment) (Comment, error) {
+func (c CommentUsecase) AddComment(ctx context.Context, uComment usecases.UComment) (usecases.UComment, error) {
 	commentEntity, err := c.commentRepository.Add(ctx, entities.CommentEntity{
-		Text: newComment.Text,
+		Text: uComment.Text,
 	})
 	if err != nil {
-		return Comment{}, err
+		return usecases.UComment{}, err
 	}
 	return toComment(commentEntity), nil
 }
 
-func toComment(commentEntity entities.CommentEntity) Comment {
-	return Comment{
+func toComment(commentEntity entities.CommentEntity) usecases.UComment {
+	return usecases.UComment{
 		Id:        commentEntity.Id,
 		Text:      commentEntity.Text,
 		CreatedAt: commentEntity.CreatedAt,

@@ -17,7 +17,9 @@
 # environment variables
 .envrc
 env.yaml
+xorm_reverse.config.gen.yaml
 
 # vscode
 .vscode
 !.vscode/settings.json
+

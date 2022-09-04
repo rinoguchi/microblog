@@ -1,6 +1,0 @@
-package: usecases
-generate:
-  models: true
-output: usecases/models.gen.go
-output-options:
-  skip-prune: true

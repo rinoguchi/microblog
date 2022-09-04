@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	controllers "github.com/rinoguchi/microblog/adapters/controllers/models"
 	"github.com/rinoguchi/microblog/adapters/repositories"
 	"github.com/rinoguchi/microblog/usecases"
 )
@@ -21,10 +22,15 @@ func NewServer(commentUsecase usecases.CommentUsecase) *Server {
 
 func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
 	ctx := context.WithValue(r.Context(), repositories.DbKey, repositories.GetDb())
-	comments, err := s.commentUsecase.FindAllComment(ctx)
+	uComments, err := s.commentUsecase.FindAllComment(ctx)
 	if err != nil {
 		handleError(w, err)
 		return
+	}
+
+	var comments []controllers.Comment
+	for _, uComment := range uComments {
+		comments = append(comments, controllers.FromUComment(uComment))
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -35,13 +41,13 @@ func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
 func (s *Server) AddComment(w http.ResponseWriter, r *http.Request) {
 	ctx := context.WithValue(r.Context(), repositories.DbKey, repositories.GetDb())
 
-	var newComment usecases.NewComment
-	if err := json.NewDecoder(r.Body).Decode(&newComment); err != nil {
+	var comment controllers.Comment
+	if err := json.NewDecoder(r.Body).Decode(&comment); err != nil {
 		handleError(w, err)
 		return
 	}
 
-	comment, err := s.commentUsecase.AddComment(ctx, newComment)
+	uComment, err := s.commentUsecase.AddComment(ctx, comment.ToUComment())
 	if err != nil {
 		handleError(w, err)
 		return
@@ -49,7 +55,7 @@ func (s *Server) AddComment(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(comment)
+	json.NewEncoder(w).Encode(controllers.FromUComment(uComment))
 }
 
 func handleError(w http.ResponseWriter, err error) {

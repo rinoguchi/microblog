@@ -55,7 +55,7 @@ paths:
 
 components:
   schemas:
-    CommonProperties:
+    CommonProps:
       type: object
       properties:
         id:
@@ -80,7 +80,7 @@ components:
     Comment:
       allOf:
         - $ref: "#/components/schemas/NewComment"
-        - $ref: "#/components/schemas/CommonProperties"
+        - $ref: "#/components/schemas/CommonProps"
 
     Error:
       type: object
