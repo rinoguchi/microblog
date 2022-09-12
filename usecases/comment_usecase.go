@@ -38,14 +38,5 @@ func (c CommentUsecase) AddComment(ctx context.Context, uComment usecases.UComme
 	if err != nil {
 		return usecases.UComment{}, err
 	}
-	return toComment(commentEntity), nil
-}
-
-func toComment(commentEntity entities.CommentEntity) usecases.UComment {
-	return usecases.UComment{
-		Id:        commentEntity.Id,
-		Text:      commentEntity.Text,
-		CreatedAt: commentEntity.CreatedAt,
-		UpdatedAt: commentEntity.UpdatedAt,
-	}
+	return usecases.FromCommentEntity(commentEntity), nil
 }
