@@ -13,6 +13,7 @@ import (
 func InitializeServer() *controllers.Server {
 	wire.Build(
 		controllers.NewServer,
+		repositories.NewDB,
 		usecases.NewCommentUsecase,
 		repositories.NewCommentRepositoryImpl,
 	)

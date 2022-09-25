@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/go-chi/cors v1.2.1
 	github.com/google/wire v0.5.0
 	github.com/invopop/yaml v0.2.0 // indirect
 	github.com/uptrace/bun v1.1.7

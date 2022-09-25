@@ -13,11 +13,11 @@ import (
 )
 
 // コンテキスト追加用のキー
-type dbKey int
+type TxKey string
 
-const DbKey dbKey = iota
+const TX_KEY TxKey = "TRANSACTION_KEY"
 
-func GetDb() *bun.DB {
+func NewDB() *bun.DB {
 
 	pgconn := pgdriver.NewConnector(
 		pgdriver.WithNetwork("tcp"),

@@ -14,8 +14,9 @@ import (
 // Injectors from wire.go:
 
 func InitializeServer() *controllers.Server {
+	db := repositories.NewDB()
 	commentRepository := repositories.NewCommentRepositoryImpl()
 	commentUsecase := usecases.NewCommentUsecase(commentRepository)
-	server := controllers.NewServer(commentUsecase)
+	server := controllers.NewServer(db, commentUsecase)
 	return server
 }
