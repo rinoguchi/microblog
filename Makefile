@@ -1,3 +1,11 @@
+.PHONY: go-install
+go-install:
+	go get
+	go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest
+	go install github.com/google/wire/cmd/wire@latest
+	go install xorm.io/reverse@v0.1.2
+	asdf reshim golang
+
 .PHONY: gen-openapi
 gen-openapi:
 	oapi-codegen -config _docs/models.config.yaml _docs/api-schema.yaml
