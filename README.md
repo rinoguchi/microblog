@@ -1,6 +1,6 @@
 # microblog
 
-個人用のマイクロブログです。仕様技術は、Golang（chi）・D1・GAE
+個人用のマイクロブログです。主な使用技術は、Golang（chi ＋ wire ＋ oapi-codegen ＋ bun）・GAE・PostgreSQL（supabase）です。
 
 # インストール
 
