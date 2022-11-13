@@ -4,8 +4,9 @@
 package usecases
 
 import (
-	"github.com/rinoguchi/microblog/entities"
 	"time"
+
+	"github.com/rinoguchi/microblog/entities"
 )
 
 type UComment struct {

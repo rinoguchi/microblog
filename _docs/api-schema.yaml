@@ -39,6 +39,22 @@ paths:
     get:
       description: get comments
       operationId: getComments
+      parameters:
+        - name: query
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: year
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: yearmonth
+          in: query
+          schema:
+            type: string
+          required: false
       responses:
         "200":
           description: comment response

@@ -13,15 +13,17 @@ import (
 	"path"
 	"strings"
 
+	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-chi/chi/v5"
+	controllers "github.com/rinoguchi/microblog/adapters/controllers/models"
 )
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
 	// (GET /comments)
-	GetComments(w http.ResponseWriter, r *http.Request)
+	GetComments(w http.ResponseWriter, r *http.Request, params controllers.GetCommentsParams)
 
 	// (POST /comments)
 	AddComment(w http.ResponseWriter, r *http.Request)
@@ -40,8 +42,46 @@ type MiddlewareFunc func(http.HandlerFunc) http.HandlerFunc
 func (siw *ServerInterfaceWrapper) GetComments(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params controllers.GetCommentsParams
+
+	// ------------- Optional query parameter "query" -------------
+	if paramValue := r.URL.Query().Get("query"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "query", r.URL.Query(), &params.Query)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "query", Err: err})
+		return
+	}
+
+	// ------------- Optional query parameter "year" -------------
+	if paramValue := r.URL.Query().Get("year"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "year", r.URL.Query(), &params.Year)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "year", Err: err})
+		return
+	}
+
+	// ------------- Optional query parameter "yearmonth" -------------
+	if paramValue := r.URL.Query().Get("yearmonth"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "yearmonth", r.URL.Query(), &params.Yearmonth)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "yearmonth", Err: err})
+		return
+	}
+
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetComments(w, r)
+		siw.Handler.GetComments(w, r, params)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -192,16 +232,16 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+RVTW/UMBD9K9HAMd2kgKD1iVIhVImPHuBUVch1ZhNXsceMJ7TVKv8d2bvZ7SorKqTe",
-	"uE1m3rwZP+clKzDkAnn0EkGtIJoOnc7hOTmHXlKo+/7bEtTVCl4yLkHBi2rXVm16qq94N/WM5d+hCUf+",
-	"kilEGK/HEh4n1AoCU0AWi/nJMGrB5qfOyyyJXYqg0YJHYh1CCfIQEBREYetbGEuwzR7Wenn7ZoezXrBF",
-	"TsAhNP9IPm4zdHOLJp0WPjITzzd3GKNuMYVzEsZfg2VsQF1tgdcHuB/pOhsgeJ+zTt9/Rt9KB+q4rssn",
-	"puWu+agEs35JWXPyok3mRqdtn0Wjdjg+fXf6vk2ZhSEHJXjtEgfnqukslDBwgnciIaqq2lYWHvN5GoyG",
-	"bRBLHhScXV4US+LCPRimm55aKKG3Bn3Msm3ov1x8nxFTQB9pYIML4rbaNMXKWTnaPCxCF9JIsdJnGrsb",
-	"8hs5rlc4XtSLOsESow4WFLzOqRKCli4Lnd5iN7mkxSzM/kFalGILylysU+miAQWfUM53NcYYKO2aWF7V",
-	"9ST4ZLcQemtyc3UbE/lkzBQ95avsv3Gm82a1Ypq9vomlHnp5tvFrFxwYPni8D2gEmwJ3mEDxgI5rtxe6",
-	"8Hg3CTrT86xpzrel9GpjlA/UPDzbUR5/zPbtIzzg+B/e4Y8Dd5hQETlZKf8edgZVVdWT0X1HUdRJfVKn",
-	"7/yfAAAA///FGwrMbgYAAA==",
+	"H4sIAAAAAAAC/+RVTW/cOAz9KwZ3j87Y2S3axKemQVEE6EcO7SkICkXm2AosUaHoJIOB/3shzXg8gQcJ",
+	"WuTWm0Q+PorPJL0GTdaTQycBqjUE3aJV6XhO1qKTeFRd920J1dUa/mVcQgX/FFNYsY0pvuLDGDPkz0Mj",
+	"jtwlkw8wXA857BuqNXgmjywG000zKsH6p0qPWRLbeIJaCR6JsQg5yMojVBCEjWtgyMHUT7DGyds3E844",
+	"wQY5Antf/yb5sLPQzS3qWC18ZCaev9xiCKrBeJyTMN71hrGG6moHvD7AvafrLIHgY7Ja9fgZXSMtVMdl",
+	"mb+QLUXNU0WYcUtKmpMTpRM3WmW6JBo1/fHpu9P3TbQsNFnIwSkbOTh5dWsgh54jvBXxoSqKnWfhMNVT",
+	"Y9BsvBhyUMHZ5UW2JM7sSjPddNRADp3R6EKSbUv/5eL7jJg8ukA9a1wQN8U2KBTWyNH2svCtjynFSJdo",
+	"zJTkHjlsnnC8KBdlhEVG5Q1U8H8y5eCVtEno2MV2nJIGkzBPC2lQsh0ocbGKrosaKviEcj75vGJlUZBD",
+	"GioTw+965NWk53jdTMzBBjocuELFfxpnyUn7bPB1bKTgKQod/f+V5dgt467wvjM6VV7chqjMeo/vpaWQ",
+	"lscwa5KtrtmYe9NGS9V38mrpNyN8IHnv8NGjFqwznDCewoEm2KyqTGUOH8ZumDXDWV2f71xxLjHIB6pX",
+	"r1bK/iZ+OvvCPQ5/4Tf8ceAbRlRAvh/HcNouVVF0pFXXUpDqpDwp40/qVwAAAP//62LuaisHAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

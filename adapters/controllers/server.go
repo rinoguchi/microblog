@@ -25,8 +25,9 @@ func NewServer(db *bun.DB, commentUsecase usecases.CommentUsecase) *Server {
 	}
 }
 
-func (s *Server) GetComments(w http.ResponseWriter, r *http.Request) {
-	uComments, err := s.commentUsecase.FindAllComment(r.Context())
+func (s *Server) GetComments(w http.ResponseWriter, r *http.Request, params controllers.GetCommentsParams) {
+	uComments, err := s.commentUsecase.FindComments(r.Context(), params.ToUGetCommentsParams())
+
 	if err != nil {
 		s.handleError(w, r, err)
 		return

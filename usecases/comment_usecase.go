@@ -19,8 +19,8 @@ func NewCommentUsecase(
 	}
 }
 
-func (c CommentUsecase) FindAllComment(ctx context.Context) ([]usecases.UComment, error) {
-	commentEntities, err := c.commentRepository.FindAll(ctx)
+func (c CommentUsecase) FindComments(ctx context.Context, params usecases.UGetCommentsParams) ([]usecases.UComment, error) {
+	commentEntities, err := c.commentRepository.Find(ctx, params.ToGetCommentsParamsEntity())
 	if err != nil {
 		return nil, err
 	}

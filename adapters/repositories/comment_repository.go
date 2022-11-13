@@ -25,10 +25,19 @@ func (c CommentRepositoryImpl) Add(ctx context.Context, commentEntity entities.C
 	return dbComment.ToCommentEntity(), nil
 }
 
-func (c CommentRepositoryImpl) FindAll(ctx context.Context) ([]entities.CommentEntity, error) {
+func (c CommentRepositoryImpl) Find(ctx context.Context, paramsEntity entities.GetCommentsParamsEntity) ([]entities.CommentEntity, error) {
 	var dbComments []repositories.DbComment
 	tx := ctx.Value(TX_KEY).(*bun.Tx)
-	err := tx.NewSelect().Model(&dbComments).Scan(ctx)
+	var err error
+	if paramsEntity.Query != nil {
+		err = tx.NewSelect().Model(&dbComments).Where("text like ?", "%"+*paramsEntity.Query+"%").Scan(ctx)
+	} else if paramsEntity.Year != nil {
+		err = tx.NewSelect().Model(&dbComments).Where("to_char(c.created_at, 'YYYY') = ?", paramsEntity.Year).Scan(ctx)
+	} else if paramsEntity.Yearmonth != nil {
+		err = tx.NewSelect().Model(&dbComments).Where("to_char(c.created_at, 'YYYYMM') = ?", paramsEntity.Yearmonth).Scan(ctx)
+	} else {
+		err = tx.NewSelect().Model(&dbComments).Scan(ctx)
+	}
 	if err != nil {
 		return nil, err
 	}

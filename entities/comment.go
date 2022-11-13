@@ -12,7 +12,13 @@ type CommentEntity struct {
 	UpdatedAt *time.Time
 }
 
+type GetCommentsParamsEntity struct {
+	Query     *string
+	Year      *string
+	Yearmonth *string
+}
+
 type CommentRepository interface {
-	FindAll(ctx context.Context) ([]CommentEntity, error)
+	Find(ctx context.Context, paramsEntity GetCommentsParamsEntity) ([]CommentEntity, error)
 	Add(ctx context.Context, comment CommentEntity) (CommentEntity, error)
 }

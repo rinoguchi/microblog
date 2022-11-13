@@ -1,5 +1,6 @@
 //go:generate go run .
 //go:generate gofmt -w ../
+//go:generate goimports -w ../
 
 package main
 

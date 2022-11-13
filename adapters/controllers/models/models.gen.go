@@ -32,6 +32,13 @@ type NewComment struct {
 	Text string `json:"text"`
 }
 
+// GetCommentsParams defines parameters for GetComments.
+type GetCommentsParams struct {
+	Query     *string `form:"query,omitempty" json:"query,omitempty"`
+	Year      *string `form:"year,omitempty" json:"year,omitempty"`
+	Yearmonth *string `form:"yearmonth,omitempty" json:"yearmonth,omitempty"`
+}
+
 // AddCommentJSONBody defines parameters for AddComment.
 type AddCommentJSONBody = NewComment
 
