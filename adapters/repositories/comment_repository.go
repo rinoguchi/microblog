@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"regexp"
 
 	repositories "github.com/rinoguchi/microblog/adapters/repositories/models"
 	"github.com/rinoguchi/microblog/entities"
@@ -29,8 +30,16 @@ func (c CommentRepositoryImpl) Find(ctx context.Context, paramsEntity entities.G
 	var dbComments []repositories.DbComment
 	tx := ctx.Value(TX_KEY).(*bun.Tx)
 	var err error
-	if paramsEntity.Query != nil {
-		err = tx.NewSelect().Model(&dbComments).Where("text like ?", "%"+*paramsEntity.Query+"%").Scan(ctx)
+	if paramsEntity.Query != nil && len(regexp.MustCompile("[ 　]+").ReplaceAllString(*paramsEntity.Query, "")) > 0 {
+		selectQuery := tx.NewSelect().Model(&dbComments)
+		for i, q := range regexp.MustCompile(`[ 　]+`).Split(*paramsEntity.Query, -1) {
+			if i == 0 {
+				selectQuery.Where("text ~* ?", q)
+			} else {
+				selectQuery.WhereOr("text ~* ?", q)
+			}
+		}
+		err = selectQuery.Scan(ctx)
 	} else if paramsEntity.Year != nil {
 		err = tx.NewSelect().Model(&dbComments).Where("to_char(c.created_at, 'YYYY') = ?", paramsEntity.Year).Scan(ctx)
 	} else if paramsEntity.Yearmonth != nil {
